@@ -1,44 +1,3 @@
-// // const a = [
-// //   [10.8, 0.0475, 0, 0],
-// //   [0.0321, 9.9, 0.0523, 0],
-// //   [0, 0.0369, 9.0, 0.057],
-// //   [0, 0, 0.0416, 8.1],
-// // ];
-// const a = [
-//   [2, -1, 0],
-//   [5, 4, 2],
-//   [0, 1, -3],
-// ];
-// const b = [3, 6, 2];
-// // const b = [12.143, 13.0897, 13.6744, 13.8972];
-
-// const solve = (a, b) => {
-//   const n = a.length;
-//   const x = new Array(n, 0);
-//   const v = new Array(n, 0);
-//   const u = new Array(n, 0);
-//   v[0] = a[0][1] / -a[0][0];
-//   u[0] = -b[0] / -a[0][0];
-//   for (let i = 1; i < n - 1; ++i) {
-//     v[i] = a[i][i + 1] / (-a[i][i] - a[i][i - 1] * v[i - 1]);
-//     u[i] =
-//       (a[i][i - 1] * u[i - 1] - b[i]) / (-a[i][i] - a[i][i - 1] * v[i - 1]);
-//   }
-//   v[n - 1] = 0;
-//   u[n - 1] =
-//     (a[n - 1][n - 2] * u[n - 2] - b[n - 1]) /
-//     (-a[n - 1][n - 1] - a[n - 1][n - 2] * v[n - 2]);
-
-//   x[n - 1] = u[n - 1];
-//   for (let i = n - 1; i > 0; --i) {
-//     x[i - 1] = v[i - 1] * x[i] + u[i - 1];
-//   }
-//   return x;
-// };
-
-// const x = solve(a, b);
-// console.log(x);
-
 const createNDimArray = require("./utils.js");
 const Complex = require("complex.js");
 
@@ -76,9 +35,9 @@ for (let i = 1; i < I - 1; ++i) {
 }
 
 let a = new Complex(0, 0);
-a = a.add(1).add(q.mul(2).mul(γ));
+a = a.add(q.mul(-γ));
 let b = new Complex(0, 0);
-b = b.add(q.mul(-γ));
+b = b.add(1).add(q.mul(2).mul(γ));
 let c = new Complex(0, 0);
 c = c.add(q.mul(-γ));
 
@@ -100,3 +59,6 @@ for (let n = 0; n < K; ++n) {
     u[n + 1][j] = α[j].mul(u[n + 1][j + 1]).add(β[j]);
   }
 }
+
+
+console.log(u[11].map((u) => u.abs()))
