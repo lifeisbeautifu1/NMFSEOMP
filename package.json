@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "nodemon --max-old-space-size=8192 index.js"
+  },
   "dependencies": {
     "complex.js": "^2.1.1",
     "cors": "^2.8.5",

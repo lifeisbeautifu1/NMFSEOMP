@@ -29,7 +29,6 @@ const findU = (l, L, n, λ, I, K) => {
     for (let i = 1; i < I; ++i) {
       u[0][i] = new Complex(ψ(i * Hx), 0);
     }
-
     let a = new Complex(0, 0);
     a = a.add(q.mul(-γ));
     let b = new Complex(0, 0);
