@@ -1,11 +1,7 @@
 const createNDimArray = require("./utils.js");
 const Complex = require("complex.js");
-const express = require("express");
-const cors = require("cors");
-const app = express();
-// const findUNikolson = require('./test.js')
 
-const findU = (l, L, n, λ, I, K) => {
+const findUNikolson = (l, L, n, λ, I, K) => {
   const k = (2 * Math.PI) / λ;
 
   const q = new Complex(0, 1 / (2 * k * n));
@@ -31,11 +27,11 @@ const findU = (l, L, n, λ, I, K) => {
       u[0][i] = new Complex(ψ(i * Hx), 0);
     }
     let a = new Complex(0, 0);
-    a = a.add(q.mul(-γ));
+    a = a.add(q.mul(-γ).mul(0.5));
     let b = new Complex(0, 0);
-    b = b.add(1).add(q.mul(2).mul(γ));
+    b = b.add(1).add(q.mul(γ));
     let c = new Complex(0, 0);
-    c = c.add(q.mul(-γ));
+    c = c.add(q.mul(-γ).mul(0.5));
 
     for (let n = 0; n < K; ++n) {
       const α = new Array(K);
@@ -46,7 +42,22 @@ const findU = (l, L, n, λ, I, K) => {
         const del = b.add(c.mul(α[j - 1]));
         α[j] = a.neg().div(del);
         // α[j] = -a / (b + c * α[j - 1]);
-        β[j] = u[n][j].sub(c.mul(β[j - 1])).div(del);
+        let ξ = new Complex(0, 0);
+        ξ = ξ.add(
+          q
+            .mul(γ)
+            .mul(0.5)
+            .mul(u[n][j + 1])
+        );
+        ξ = ξ.add(
+          q
+            .mul(γ)
+            .mul(0.5)
+            .mul(u[n][j - 1])
+        );
+        ξ = ξ.add(q.mul(γ).mul(-1).add(1).mul(u[n][j]));
+        // β[j] = ξ.sub(c.mul(β[j - 1])).div(del);
+        β[j] = ξ.sub(c.mul(β[j - 1])).div(del);
         // β[j] = (u[n][j] - c * β[j - 1]) / (b + c * α[j - 1]);
       }
       u[n + 1][I - 1] = new Complex(0, 0);
@@ -55,19 +66,8 @@ const findU = (l, L, n, λ, I, K) => {
         u[n + 1][j] = α[j].mul(u[n + 1][j + 1]).add(β[j]);
       }
     }
-
     return u;
   }
 };
 
-app.use(express.json());
-app.use(cors());
-
-app.post("/", (req, res) => {
-  const { l, L, n, λ, I, K } = req.body;
-  const u = findU(l, L, n, λ, I, K);
-
-  res.status(200).send(u.map((u) => u.map((v) => v.abs())));
-});
-
-app.listen(5000, () => console.log("Server running"));
+module.exports = findUNikolson;
