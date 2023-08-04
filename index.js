@@ -50,8 +50,7 @@ const findU = (l, L, n, λ, I, K) => {
         β[j] = u[n][j].sub(c.mul(β[j - 1])).div(del);
         // β[j] = (u[n][j] - c * β[j - 1]) / (b + c * α[j - 1]);
       }
-      u[n + 1][I - 1] = new Complex(0, 0);
-      for (let j = I - 2; j > 0; --j) {
+      for (let j = I - 1; j > 0; --j) {
         // u[n + 1][j] = α[j] * u[n + 1][j + 1] + β[j];
         u[n + 1][j] = α[j].mul(u[n + 1][j + 1]).add(β[j]);
       }
