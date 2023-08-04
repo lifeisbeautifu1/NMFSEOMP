@@ -20,7 +20,7 @@ const findUNikolson = (l, L, n, λ, I, K) => {
   if (u) {
     for (let k = 0; k < K + 1; ++k) {
       u[k][0] = new Complex(0, 0);
-      u[k][I - 1] = new Complex(0, 0);
+      u[k][I] = new Complex(0, 0);
     }
 
     for (let i = 1; i < I; ++i) {

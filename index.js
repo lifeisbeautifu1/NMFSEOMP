@@ -2,8 +2,8 @@ const createNDimArray = require("./utils.js");
 const Complex = require("complex.js");
 const express = require("express");
 const cors = require("cors");
+const findUNikolson = require("./nikolson.js");
 const app = express();
-// const findUNikolson = require('./test.js')
 
 const findU = (l, L, n, λ, I, K) => {
   const k = (2 * Math.PI) / λ;
@@ -19,17 +19,18 @@ const findU = (l, L, n, λ, I, K) => {
     return 12 * Math.exp(-Math.pow((2 * x - l) / (0.4 * l), 4));
   };
 
-  const u = createNDimArray([K, I]);
+  const u = createNDimArray([K + 1, I + 1]);
 
   if (u) {
-    for (let k = 0; k < K; ++k) {
+    for (let k = 0; k <= K; ++k) {
       u[k][0] = new Complex(0, 0);
-      u[k][I - 1] = new Complex(0, 0);
+      u[k][I] = new Complex(0, 0);
     }
 
-    for (let i = 1; i < I - 1; ++i) {
+    for (let i = 1; i < I; ++i) {
       u[0][i] = new Complex(ψ(i * Hx), 0);
     }
+
     let a = new Complex(0, 0);
     a = a.add(q.mul(-γ));
     let b = new Complex(0, 0);
@@ -37,19 +38,19 @@ const findU = (l, L, n, λ, I, K) => {
     let c = new Complex(0, 0);
     c = c.add(q.mul(-γ));
 
-    for (let n = 0; n < K - 1; ++n) {
+    for (let n = 0; n < K; ++n) {
       const α = new Array(K);
       const β = new Array(K);
       α[0] = new Complex(0, 0);
       β[0] = new Complex(0, 0);
-      for (let j = 1; j < I - 1; ++j) {
+      for (let j = 1; j < I; ++j) {
         const del = b.add(c.mul(α[j - 1]));
         α[j] = a.neg().div(del);
         // α[j] = -a / (b + c * α[j - 1]);
         β[j] = u[n][j].sub(c.mul(β[j - 1])).div(del);
         // β[j] = (u[n][j] - c * β[j - 1]) / (b + c * α[j - 1]);
       }
-      // u[n + 1][I - 1] = new Complex(0, 0);
+      u[n + 1][I - 1] = new Complex(0, 0);
       for (let j = I - 2; j > 0; --j) {
         // u[n + 1][j] = α[j] * u[n + 1][j + 1] + β[j];
         u[n + 1][j] = α[j].mul(u[n + 1][j + 1]).add(β[j]);
