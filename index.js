@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const findUNikolson = require("./nikolson.js");
 const findU = require("./solve.js");
 const app = express();
 
@@ -15,7 +14,3 @@ app.post("/", (req, res) => {
 });
 
 app.listen(5000, () => console.log("Server running"));
-
-module.exports = {
-  findU,
-};
